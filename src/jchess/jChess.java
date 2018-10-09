@@ -15,7 +15,8 @@ public class jChess {
             @Override
             public void run() {
 
-                JFrame frame = new GUI("jChess");
+
+                JFrame frame = new GUI("jChess", board);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLocationByPlatform(true);
                 frame.pack();
