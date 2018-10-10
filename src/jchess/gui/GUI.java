@@ -25,6 +25,7 @@ public class GUI extends JFrame {
 
         // Set Layout
         setLayout(new GridLayout(9, 9, 0, 0));
+        setBackground(Color.GRAY);
 
         // Get Piece icons
         try {

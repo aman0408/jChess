@@ -97,11 +97,19 @@ public class Board {
     public boolean makeMove() {
 
         // to make changes
-        System.out.println("Previous = (" + xCoordinatePrevious + "," + yCoordinatePrevious + ")");
-        System.out.println("Next = (" + xCoordinateNew + "," + yCoordinateNew + ")");
+        System.out.println("Move made");
         setMovePieceSelected(false);
-        setNextMoveAlliance(getOppositionAlliance(getNextMoveAlliance()));
+        updateBoard();
         return true;
+    }
+
+    private void updateBoard() {
+
+        setNextMoveAlliance(getOppositionAlliance(getNextMoveAlliance()));
+        boardCoordinate[xCoordinateNew - 1][yCoordinateNew - 1] =
+                boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1];
+        boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1] = null;
+        System.out.println("Updated board");
     }
 
     private void initStandardBoard() {
@@ -169,16 +177,17 @@ public class Board {
 
     private void printCurrentBoard() {
 
-        for(int y = MAX_Y_COORDINATE; y >= MIN_Y_COORDINATE; y--) {
-
-            for(int x = MIN_X_COORDINATE; x <= MAX_X_COORDINATE; x++) {
-
-                System.out.print(((this.boardCoordinate[x - 1][y - 1] == null) ?
-                        "-" : (this.boardCoordinate[x - 1][y - 1].toString())) + "  ");
-            }
-
-            System.out.println();
-        }
+        System.out.println("Board initialised");
+//        for(int y = MAX_Y_COORDINATE; y >= MIN_Y_COORDINATE; y--) {
+//
+//            for(int x = MIN_X_COORDINATE; x <= MAX_X_COORDINATE; x++) {
+//
+//                System.out.print(((this.boardCoordinate[x - 1][y - 1] == null) ?
+//                        "-" : (this.boardCoordinate[x - 1][y - 1].toString())) + "  ");
+//            }
+//
+//            System.out.println();
+//        }
     }
 
     public Piece getPieceOnCoordinate(int xCoordinate, int yCoordinate) {
