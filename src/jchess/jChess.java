@@ -12,9 +12,9 @@ public class jChess {
         Board board = new Board();
 
         SwingUtilities.invokeLater(new Runnable() {
+
             @Override
             public void run() {
-
 
                 JFrame frame = new GUI("jChess", board);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

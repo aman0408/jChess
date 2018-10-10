@@ -10,18 +10,80 @@ import static jchess.game.Alliance.WHITE;
 
 public class Board {
 
-    //public static final int NUMBER_OF_TILES = 64;
-    public static final int MIN_X_COORDINATE = 1;
+    private static final int NUMBER_OF_TILES = 64;
+    private static final int MIN_X_COORDINATE = 1;
     public static final int  MAX_X_COORDINATE = 8;
-    public static final int MIN_Y_COORDINATE = 1;
+    private static final int MIN_Y_COORDINATE = 1;
     public static final int MAX_Y_COORDINATE = 8;
     private Piece[][] boardCoordinate = new Piece[MAX_X_COORDINATE][MAX_Y_COORDINATE];
+    private int xCoordinatePrevious;
+    private int yCoordinatePrevious;
+    private int xCoordinateNew;
+    private int yCoordinateNew;
+    private Alliance nextMoveAlliance;
+    private boolean isMovePieceSelected;
     private Set<Piece> whitePieces = new HashSet<>();
     private Set<Piece> blackPieces = new HashSet<>();
 
     public Board() {
 
         initStandardBoard();
+    }
+
+    public Alliance getNextMoveAlliance() {
+        return nextMoveAlliance;
+    }
+
+    public void setNextMoveAlliance(Alliance nextMoveAlliance) {
+        this.nextMoveAlliance = nextMoveAlliance;
+    }
+
+    public Set<Piece> getWhitePieces() {
+        return whitePieces;
+    }
+
+    public Set<Piece> getBlackPieces() {
+        return blackPieces;
+    }
+
+    public boolean isMovePieceSelected() {
+        return isMovePieceSelected;
+    }
+
+    public void setMovePieceSelected(boolean movePieceSelected) {
+        isMovePieceSelected = movePieceSelected;
+    }
+
+    public int getxCoordinatePrevious() {
+        return xCoordinatePrevious;
+    }
+
+    public void setxCoordinatePrevious(int xCoordinatePrevious) {
+        this.xCoordinatePrevious = xCoordinatePrevious;
+    }
+
+    public int getyCoordinatePrevious() {
+        return yCoordinatePrevious;
+    }
+
+    public void setyCoordinatePrevious(int yCoordinatePrevious) {
+        this.yCoordinatePrevious = yCoordinatePrevious;
+    }
+
+    public int getxCoordinateNew() {
+        return xCoordinateNew;
+    }
+
+    public void setxCoordinateNew(int xCoordinateNew) {
+        this.xCoordinateNew = xCoordinateNew;
+    }
+
+    public int getyCoordinateNew() {
+        return yCoordinateNew;
+    }
+
+    public void setyCoordinateNew(int yCoordinateNew) {
+        this.yCoordinateNew = yCoordinateNew;
     }
 
     public static boolean isValidCoordinate(int xCandidateDestinationCoordinate, int yCandidateDestinationCoordinate) {
@@ -32,11 +94,14 @@ public class Board {
                 && (yCandidateDestinationCoordinate <= MAX_Y_COORDINATE));
     }
 
-    public void makeMove(int xCoordinatePrevious, int yCoordinatePrevious,
-                         int xCoordinateNext, int yCoordinateNext) {
+    public boolean makeMove() {
 
+        // to make changes
         System.out.println("Previous = (" + xCoordinatePrevious + "," + yCoordinatePrevious + ")");
-        System.out.println("Next = (" + xCoordinateNext + "," + yCoordinateNext + ")");
+        System.out.println("Next = (" + xCoordinateNew + "," + yCoordinateNew + ")");
+        setMovePieceSelected(false);
+        setNextMoveAlliance(getOppositionAlliance(getNextMoveAlliance()));
+        return true;
     }
 
     private void initStandardBoard() {
@@ -77,6 +142,8 @@ public class Board {
             }
         }
 
+        setNextMoveAlliance(Alliance.WHITE);
+        setMovePieceSelected(false);
         setPieces();
         printCurrentBoard();
     }
@@ -117,5 +184,14 @@ public class Board {
     public Piece getPieceOnCoordinate(int xCoordinate, int yCoordinate) {
 
         return (boardCoordinate[xCoordinate - 1][yCoordinate - 1]);
+    }
+
+    private Alliance getOppositionAlliance(Alliance alliance) {
+
+        if(alliance == Alliance.WHITE) {
+            return Alliance.BLACK;
+        } else {
+            return Alliance.WHITE;
+        }
     }
 }
