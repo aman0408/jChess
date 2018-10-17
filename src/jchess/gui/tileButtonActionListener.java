@@ -43,7 +43,7 @@ public class tileButtonActionListener implements ActionListener {
             board.setxCoordinatePrevious(xCoordinate);
             board.setyCoordinatePrevious(yCoordinate);
             board.setMovePieceSelected(true);
-            System.out.println("Previous selected");
+            System.out.println("Piece selected");
         }
     }
 }

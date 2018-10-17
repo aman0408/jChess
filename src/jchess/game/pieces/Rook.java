@@ -4,6 +4,8 @@ import jchess.game.Alliance;
 import jchess.game.board.Move;
 import jchess.game.board.Board;
 
+import java.util.Set;
+
 public class Rook extends Piece {
 
     private final int[] CANDIDATE_MOVE_X_VECTOR_COORDINATES = {-1, 0, 1};
@@ -29,6 +31,12 @@ public class Rook extends Piece {
     }
 
     @Override
+    public Set<Move> getLegalMoves() {
+        calculatePieceLegalMoves();
+        return this.legalMoves;
+    }
+
+    @Override
     public void calculatePieceLegalMoves() {
 
         this.legalMoves.clear();
@@ -47,7 +55,8 @@ public class Rook extends Piece {
                 while(Board.isValidCoordinate(xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)
                         && Move.isValidMove(this.board, this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)) {
 
-                    this.legalMoves.add(new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate));
+                    Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
+                    this.legalMoves.add(legalMove);
 
                     if(board.getPieceOnCoordinate(xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)
                             != null) {

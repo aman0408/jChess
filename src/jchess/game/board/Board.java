@@ -10,7 +10,6 @@ import static jchess.game.Alliance.WHITE;
 
 public class Board {
 
-    private static final int NUMBER_OF_TILES = 64;
     private static final int MIN_X_COORDINATE = 1;
     public static final int  MAX_X_COORDINATE = 8;
     private static final int MIN_Y_COORDINATE = 1;
@@ -30,20 +29,25 @@ public class Board {
         initStandardBoard();
     }
 
+    private Piece[][] getBoardCoordinate() {
+        return boardCoordinate;
+    }
+
     public Alliance getNextMoveAlliance() {
         return nextMoveAlliance;
     }
 
-    public void setNextMoveAlliance(Alliance nextMoveAlliance) {
+    private void setNextMoveAlliance(Alliance nextMoveAlliance) {
         this.nextMoveAlliance = nextMoveAlliance;
     }
 
-    public Set<Piece> getWhitePieces() {
-        return whitePieces;
-    }
+    private Set<Piece> getAlliancePieces(Alliance alliance) {
 
-    public Set<Piece> getBlackPieces() {
-        return blackPieces;
+        if(alliance == Alliance.WHITE) {
+            return whitePieces;
+        } else {
+            return blackPieces;
+        }
     }
 
     public boolean isMovePieceSelected() {
@@ -177,7 +181,7 @@ public class Board {
 
     private void printCurrentBoard() {
 
-        System.out.println("Board initialised");
+        System.out.println("Board initialised (BACKEND)");
 //        for(int y = MAX_Y_COORDINATE; y >= MIN_Y_COORDINATE; y--) {
 //
 //            for(int x = MIN_X_COORDINATE; x <= MAX_X_COORDINATE; x++) {

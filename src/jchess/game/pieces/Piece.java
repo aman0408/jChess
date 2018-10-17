@@ -4,6 +4,7 @@ import jchess.game.Alliance;
 import jchess.game.board.Board;
 import jchess.game.board.Move;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Piece {
@@ -13,7 +14,7 @@ public abstract class Piece {
     int yCoordinate;
     Alliance pieceAlliance;
     int pieceMoveNumber;
-    Set<Move> legalMoves;
+    Set<Move> legalMoves = new HashSet<>();
 
     Piece(Board board, int xCoordinate, int yCoordinate, Alliance pieceAlliance, int pieceMoveNumber) {
         this.board = board;
@@ -26,6 +27,7 @@ public abstract class Piece {
     public abstract Alliance getPieceAlliance();
     public abstract void setPieceMoveNumber();
     public abstract int getPieceMoveNumber();
+    public abstract Set<Move> getLegalMoves();
     public abstract void calculatePieceLegalMoves();
     public abstract String toString();
     public abstract void setCoordinate(int xCoordinate, int yCoordinate);

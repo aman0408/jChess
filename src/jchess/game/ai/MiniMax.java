@@ -1,4 +1,5 @@
 package jchess.game.ai;
 
-public class Minimax {
+public class MiniMax {
+
 }

@@ -42,6 +42,7 @@ public class GUI extends JFrame {
         } catch (Exception e) {
 
             System.out.println("Error loading piece icons");
+            dispose();
         }
 
         // Create buttons
