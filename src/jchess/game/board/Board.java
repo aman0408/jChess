@@ -20,7 +20,7 @@ public class Board {
     private int yCoordinatePrevious;
     private int xCoordinateNew;
     private int yCoordinateNew;
-    private Alliance nextMoveAlliance;
+    private Alliance currentMoveAlliance;
     private boolean isMovePieceSelected;
     private Set<Piece> whitePieces = new HashSet<>();
     private Set<Piece> blackPieces = new HashSet<>();
@@ -34,12 +34,12 @@ public class Board {
         return boardCoordinate;
     }
 
-    public Alliance getNextMoveAlliance() {
-        return nextMoveAlliance;
+    public Alliance getCurrentMoveAlliance() {
+        return currentMoveAlliance;
     }
 
-    private void setNextMoveAlliance(Alliance nextMoveAlliance) {
-        this.nextMoveAlliance = nextMoveAlliance;
+    private void setCurrentMoveAlliance(Alliance nextMoveAlliance) {
+        this.currentMoveAlliance = nextMoveAlliance;
     }
 
     private Set<Piece> getAlliancePieces(Alliance alliance) {
@@ -101,19 +101,48 @@ public class Board {
 
     public boolean makeMove(GUI gui) {
 
-        // to make changes
-        System.out.println("Move made");
-        setMovePieceSelected(false);
-        updateBoard(gui);
-        return true;
+        if(isInLegalMoves()) {
+
+            System.out.println("Move made");
+            setMovePieceSelected(false);
+            updateBoard(gui);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private boolean isInLegalMoves() {
+
+        Set<Piece> currentAlliancePieces = getAlliancePieces(currentMoveAlliance);
+        for(Piece piece : currentAlliancePieces) {
+
+            piece.calculatePieceLegalMoves();
+            Set<Move> pieceLegalMoves = piece.getPieceLegalMoves();
+            for(Move move : pieceLegalMoves) {
+
+                if(move.getxCoordinatePrevious() == getxCoordinatePrevious()
+                && move.getyCoordinatePrevious() == getyCoordinatePrevious()
+                && move.getxCoordinateNew() == getxCoordinateNew()
+                && move.getyCoordinateNew() == getyCoordinateNew()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void updateBoard(GUI gui) {
 
-        setNextMoveAlliance(getOppositionAlliance(getNextMoveAlliance()));
+        Alliance oppositionAlliance = getOppositionAlliance(currentMoveAlliance);
+        setCurrentMoveAlliance(oppositionAlliance);
+        Piece movedPiece = getPieceOnCoordinate(xCoordinatePrevious, yCoordinatePrevious);
         boardCoordinate[xCoordinateNew - 1][yCoordinateNew - 1] =
                 boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1];
         boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1] = null;
+        movedPiece.setCoordinate(xCoordinateNew, yCoordinateNew);
         gui.updateBoardGUI();
         System.out.println("Updated board");
     }
@@ -156,7 +185,7 @@ public class Board {
             }
         }
 
-        setNextMoveAlliance(Alliance.WHITE);
+        setCurrentMoveAlliance(Alliance.WHITE);
         setMovePieceSelected(false);
         setPieces();
         printCurrentBoard();

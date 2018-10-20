@@ -25,7 +25,7 @@ public class tileButtonActionListener implements ActionListener {
 
         Piece pieceOnCoordinate = board.getPieceOnCoordinate(xCoordinate, yCoordinate);
 
-        if(pieceOnCoordinate == null || pieceOnCoordinate.getPieceAlliance() != board.getNextMoveAlliance()) {
+        if(pieceOnCoordinate == null || pieceOnCoordinate.getPieceAlliance() != board.getCurrentMoveAlliance()) {
 
             if(board.isMovePieceSelected()) {
 
