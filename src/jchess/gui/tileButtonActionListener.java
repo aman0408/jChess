@@ -32,7 +32,7 @@ public class tileButtonActionListener implements ActionListener {
                 board.setxCoordinateNew(xCoordinate);
                 board.setyCoordinateNew(yCoordinate);
                 if (!board.makeMove(gui)) {
-                    System.out.println("Invalid move (GUI)");
+                    System.out.println("Invalid move!");
                 }
             }
         } else {
@@ -40,7 +40,6 @@ public class tileButtonActionListener implements ActionListener {
             board.setxCoordinatePrevious(xCoordinate);
             board.setyCoordinatePrevious(yCoordinate);
             board.setMovePieceSelected(true);
-            System.out.println("Piece selected");
         }
     }
 }

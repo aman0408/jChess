@@ -4,14 +4,12 @@ import jchess.game.board.pieces.Piece;
 
 public class Move {
 
-    private Piece movePiece;
     private int xCoordinatePrevious;
     private int yCoordinatePrevious;
     private int xCoordinateNew;
     private int yCoordinateNew;
 
     public Move(Piece movePiece, int xCoordinateNew, int yCoordinateNew) {
-        this.movePiece = movePiece;
         this.xCoordinatePrevious = movePiece.getXCoordinate();
         this.yCoordinatePrevious = movePiece.getYCoordinate();
         this.xCoordinateNew = xCoordinateNew;
@@ -22,10 +20,14 @@ public class Move {
 
         try {
 
-            if((board.getPieceOnCoordinate(xCandidateDestinationCoordinate, yCandidateDestinationCoordinate))
-                    .getPieceAlliance() == piece.getPieceAlliance()) {
-              return false;
-            }
+            Piece pieceOnCoordinate = board.getPieceOnCoordinate(xCandidateDestinationCoordinate,
+                                                    yCandidateDestinationCoordinate);
+
+            if((pieceOnCoordinate).getPieceAlliance() == piece.getPieceAlliance()) {
+                return false;
+            } //else if(pieceOnCoordinate instanceof King) {
+                //return false;
+            //}
 
         } catch(NullPointerException e) {
 
@@ -35,23 +37,19 @@ public class Move {
         return true;
     }
 
-    public Piece getMovePiece() {
-        return movePiece;
-    }
-
-    public int getxCoordinatePrevious() {
+    int getxCoordinatePrevious() {
         return xCoordinatePrevious;
     }
 
-    public int getyCoordinatePrevious() {
+    int getyCoordinatePrevious() {
         return yCoordinatePrevious;
     }
 
-    public int getxCoordinateNew() {
+    int getxCoordinateNew() {
         return xCoordinateNew;
     }
 
-    public int getyCoordinateNew() {
+    int getyCoordinateNew() {
         return yCoordinateNew;
     }
 }

@@ -45,9 +45,27 @@ public class Pawn extends Piece {
                 if(Board.isValidCoordinate(xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)
                         && Move.isValidMove(this.board, this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)) {
 
-                    Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
-                    this.legalMoves.add(legalMove);
+                    Alliance pieceAlliance = getPieceAlliance();
+                    if(pieceAlliance == board.getCurrentMoveAlliance()) {
 
+                        boolean isInCheckAfterMove = board.isInCheckAfterMove(this, xCandidateDestinationCoordinate,
+                                yCandidateDestinationCoordinate);
+
+                        if(!isInCheckAfterMove) {
+
+                            if(board.getPieceOnCoordinate(xCandidateDestinationCoordinate,
+                                    yCandidateDestinationCoordinate) instanceof King) {
+                                break;
+                            }
+                            Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
+                            this.legalMoves.add(legalMove);
+                        }
+                    } else if(pieceAlliance != board.getCurrentMoveAlliance()) {
+
+                        Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
+                        this.legalMoves.add(legalMove);
+                        //System.out.println("TEST909");
+                    }
                 }
             }
         }

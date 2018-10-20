@@ -15,7 +15,7 @@ public class Board {
     public static final int  MAX_X_COORDINATE = 8;
     private static final int MIN_Y_COORDINATE = 1;
     public static final int MAX_Y_COORDINATE = 8;
-    private static int moveNumber = 0;
+    private int moveNumber = 1;
     private Piece[][] boardCoordinate = new Piece[MAX_X_COORDINATE][MAX_Y_COORDINATE];
     private int xCoordinatePrevious;
     private int yCoordinatePrevious;
@@ -32,7 +32,7 @@ public class Board {
     }
 
     public Alliance getCurrentMoveAlliance() {
-        return currentMoveAlliance;
+        return this.currentMoveAlliance;
     }
 
     private void setCurrentMoveAlliance(Alliance nextMoveAlliance) {
@@ -100,7 +100,6 @@ public class Board {
 
         if(isInAllianceLegalMoves(currentMoveAlliance)) {
 
-            System.out.println("Move made");
             setMovePieceSelected(false);
             updateBoard(gui);
             return true;
@@ -155,7 +154,6 @@ public class Board {
 
     private void updateBoard(GUI gui) {
 
-        moveNumber++;
         Alliance oppositionAlliance = getOppositionAlliance(currentMoveAlliance);
         setCurrentMoveAlliance(oppositionAlliance);
         updateAlliancePieces();
@@ -171,8 +169,9 @@ public class Board {
 
             gui.endGame();
         } else {
-            System.out.println("Move number: " + moveNumber);
-            System.out.println("Board updated: Number of next possible moves = " + numberOfPossibleMoves);
+            System.out.println(getCurrentMoveAlliance() + "'s Move: \n"
+                    + "Move number:" + (moveNumber++)
+                    + "\nNumber of next possible moves = " + numberOfPossibleMoves + "\n");
         }
     }
 
@@ -218,7 +217,9 @@ public class Board {
         setMovePieceSelected(false);
         setPieces();
         int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
-        System.out.println("Board initiated: Number of next possible moves = " + numberOfPossibleMoves);
+        System.out.println(getCurrentMoveAlliance() + "'s Move: \n"
+                + "Move number:" + (moveNumber++)
+                + "\nNumber of next possible moves = " + numberOfPossibleMoves + "\n");
         printCurrentBoard();
     }
 
@@ -243,7 +244,7 @@ public class Board {
 
     private void printCurrentBoard() {
 
-        System.out.println("Board initialised (BACKEND)");
+//        System.out.println("Board initialised (BACKEND)");
 //        for(int y = MAX_Y_COORDINATE; y >= MIN_Y_COORDINATE; y--) {
 //
 //            for(int x = MIN_X_COORDINATE; x <= MAX_X_COORDINATE; x++) {
@@ -268,5 +269,51 @@ public class Board {
         } else {
             return Alliance.WHITE;
         }
+    }
+
+    public boolean isInCheckAfterMove(Piece piece, int xCandidateDestinationCoordinate,
+                                      int yCandidateDestinationCoordinate) {
+
+        Piece pieceOnDestination = getPieceOnCoordinate(xCandidateDestinationCoordinate,
+                yCandidateDestinationCoordinate);
+        if(pieceOnDestination != null) {
+            getAlliancePieces(getOppositionAlliance(currentMoveAlliance)).remove(pieceOnDestination);
+        }
+
+        int xPrevious = piece.getXCoordinate();
+        int yPrevious = piece.getYCoordinate();
+        boardCoordinate[xCandidateDestinationCoordinate - 1][yCandidateDestinationCoordinate - 1] =
+                boardCoordinate[xPrevious - 1][yPrevious - 1];
+        boardCoordinate[xPrevious - 1][yPrevious - 1] = null;
+        boolean isInCheck = isInCheck();
+
+        // revert board
+        boardCoordinate[xPrevious - 1][yPrevious - 1] =
+                boardCoordinate[xCandidateDestinationCoordinate - 1][yCandidateDestinationCoordinate - 1];
+        boardCoordinate[xCandidateDestinationCoordinate - 1][yCandidateDestinationCoordinate - 1] = pieceOnDestination;
+        if(pieceOnDestination != null) {
+            getAlliancePieces(getOppositionAlliance(currentMoveAlliance)).add(pieceOnDestination);
+        }
+
+        return isInCheck;
+    }
+
+    private boolean isInCheck() {
+
+        Set<Piece> oppAlliancePieces = getAlliancePieces(getOppositionAlliance(currentMoveAlliance));
+        for(Piece oppPiece : oppAlliancePieces) {
+            oppPiece.calculatePieceLegalMoves();
+            for(Move oppMove : oppPiece.getPieceLegalMoves()) {
+
+                Piece pieceOnCoordinate = getPieceOnCoordinate(oppMove.getxCoordinateNew(),
+                                                               oppMove.getyCoordinateNew());
+
+                if(pieceOnCoordinate instanceof King) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

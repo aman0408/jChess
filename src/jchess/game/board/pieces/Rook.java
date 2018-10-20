@@ -31,10 +31,27 @@ public class Rook extends Piece {
 
                 while(Board.isValidCoordinate(xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)
                         && Move.isValidMove(this.board, this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)) {
+                    Alliance pieceAlliance = getPieceAlliance();
+                    if(pieceAlliance == board.getCurrentMoveAlliance()) {
 
-                    Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
-                    this.legalMoves.add(legalMove);
+                        boolean isInCheckAfterMove = board.isInCheckAfterMove(this, xCandidateDestinationCoordinate,
+                                yCandidateDestinationCoordinate);
 
+                        if(!isInCheckAfterMove) {
+
+                            if(board.getPieceOnCoordinate(xCandidateDestinationCoordinate,
+                                    yCandidateDestinationCoordinate) instanceof King) {
+                                break;
+                            }
+                            Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
+                            this.legalMoves.add(legalMove);
+                        }
+                    } else if(pieceAlliance != board.getCurrentMoveAlliance()) {
+
+                        Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
+                        this.legalMoves.add(legalMove);
+                        //System.out.println("TEST909");
+                    }
                     Piece pieceOnCoordinate = board.getPieceOnCoordinate(xCandidateDestinationCoordinate,
                             yCandidateDestinationCoordinate);
                     if (pieceOnCoordinate != null) {
