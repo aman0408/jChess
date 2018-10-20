@@ -28,7 +28,7 @@ public class Pawn extends Piece {
                         continue;
                     }
 
-                    if(pieceMoveNumber != 0)  {
+                    if(getPieceMoveNumber() != 0)  {
                         continue;
                     }
                 } else {

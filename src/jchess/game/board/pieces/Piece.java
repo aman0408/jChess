@@ -13,7 +13,7 @@ public abstract class Piece {
     int xCoordinate;
     int yCoordinate;
     private Alliance pieceAlliance;
-    int pieceMoveNumber;
+    private int pieceMoveNumber;
     Set<Move> legalMoves = new HashSet<>();
 
     Piece(Board board, int xCoordinate, int yCoordinate, Alliance pieceAlliance, int pieceMoveNumber) {
@@ -52,7 +52,7 @@ public abstract class Piece {
         this.pieceMoveNumber++;
     }
 
-    public int getPieceMoveNumber() {
+    int getPieceMoveNumber() {
         return pieceMoveNumber;
     }
 

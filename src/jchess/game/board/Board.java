@@ -15,6 +15,7 @@ public class Board {
     public static final int  MAX_X_COORDINATE = 8;
     private static final int MIN_Y_COORDINATE = 1;
     public static final int MAX_Y_COORDINATE = 8;
+    private static int moveNumber = 0;
     private Piece[][] boardCoordinate = new Piece[MAX_X_COORDINATE][MAX_Y_COORDINATE];
     private int xCoordinatePrevious;
     private int yCoordinatePrevious;
@@ -28,10 +29,6 @@ public class Board {
     public Board() {
 
         initStandardBoard();
-    }
-
-    private Piece[][] getBoardCoordinate() {
-        return boardCoordinate;
     }
 
     public Alliance getCurrentMoveAlliance() {
@@ -101,7 +98,7 @@ public class Board {
 
     public boolean makeMove(GUI gui) {
 
-        if(isInLegalMoves()) {
+        if(isInAllianceLegalMoves(currentMoveAlliance)) {
 
             System.out.println("Move made");
             setMovePieceSelected(false);
@@ -113,12 +110,23 @@ public class Board {
         }
     }
 
-    private boolean isInLegalMoves() {
+    private int calculateAllianceLegalMoves(Alliance alliance) {
 
-        Set<Piece> currentAlliancePieces = getAlliancePieces(currentMoveAlliance);
-        for(Piece piece : currentAlliancePieces) {
+        int numberOfAllianceLegalMoves = 0;
+        Set<Piece> currentAlliancePieces = getAlliancePieces(alliance);
+        for (Piece piece : currentAlliancePieces) {
 
             piece.calculatePieceLegalMoves();
+            numberOfAllianceLegalMoves += piece.getPieceLegalMoves().size();
+        }
+        return numberOfAllianceLegalMoves;
+    }
+
+    private boolean isInAllianceLegalMoves(Alliance alliance) {
+
+        Set<Piece> currentAlliancePieces = getAlliancePieces(alliance);
+        for(Piece piece : currentAlliancePieces) {
+
             Set<Move> pieceLegalMoves = piece.getPieceLegalMoves();
             for(Move move : pieceLegalMoves) {
 
@@ -134,17 +142,38 @@ public class Board {
         return false;
     }
 
+    private void updateAlliancePieces() {
+
+        Set<Piece> alliancePieces = getAlliancePieces(currentMoveAlliance);
+        try {
+            Piece deadPiece = getPieceOnCoordinate(xCoordinateNew, yCoordinateNew);
+            alliancePieces.remove(deadPiece);
+        } catch (NullPointerException ignored) {
+
+        }
+    }
+
     private void updateBoard(GUI gui) {
 
+        moveNumber++;
         Alliance oppositionAlliance = getOppositionAlliance(currentMoveAlliance);
         setCurrentMoveAlliance(oppositionAlliance);
+        updateAlliancePieces();
         Piece movedPiece = getPieceOnCoordinate(xCoordinatePrevious, yCoordinatePrevious);
         boardCoordinate[xCoordinateNew - 1][yCoordinateNew - 1] =
                 boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1];
         boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1] = null;
         movedPiece.setCoordinate(xCoordinateNew, yCoordinateNew);
+        movedPiece.setPieceMoveNumber();
+        int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
         gui.updateBoardGUI();
-        System.out.println("Updated board");
+        if(numberOfPossibleMoves == 0) {
+
+            gui.endGame();
+        } else {
+            System.out.println("Move number: " + moveNumber);
+            System.out.println("Board updated: Number of next possible moves = " + numberOfPossibleMoves);
+        }
     }
 
     private void initStandardBoard() {
@@ -188,6 +217,8 @@ public class Board {
         setCurrentMoveAlliance(Alliance.WHITE);
         setMovePieceSelected(false);
         setPieces();
+        int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
+        System.out.println("Board initiated: Number of next possible moves = " + numberOfPossibleMoves);
         printCurrentBoard();
     }
 

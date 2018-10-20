@@ -134,6 +134,9 @@ public class GUI extends JFrame {
         Icon icon = tileButton[a][b].getIcon();
         tileButton[c][d].setIcon(icon);
         tileButton[a][b].setIcon(new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB)));
+    }
 
+    public void endGame() {
+        JOptionPane.showMessageDialog(this, "GAME OVER");
     }
 }
