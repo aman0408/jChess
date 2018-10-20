@@ -35,8 +35,9 @@ public class Rook extends Piece {
                     Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
                     this.legalMoves.add(legalMove);
 
-                    if(board.getPieceOnCoordinate(xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)
-                            != null) {
+                    Piece pieceOnCoordinate = board.getPieceOnCoordinate(xCandidateDestinationCoordinate,
+                            yCandidateDestinationCoordinate);
+                    if (pieceOnCoordinate != null) {
                         break;
                     }
 
@@ -55,7 +56,8 @@ public class Rook extends Piece {
     @Override
     public String toString() {
 
-        if(this.getPieceAlliance().isWhite()) {
+        Alliance pieceAlliance = getPieceAlliance();
+        if(pieceAlliance.isWhite()) {
             return "R";
         }
         else

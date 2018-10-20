@@ -43,7 +43,8 @@ public class King extends Piece {
     @Override
     public String toString() {
 
-        if(this.getPieceAlliance().isWhite()) {
+        Alliance pieceAlliance = getPieceAlliance();
+        if(pieceAlliance.isWhite()) {
             return "K";
         }
         else

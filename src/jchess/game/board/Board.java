@@ -2,6 +2,7 @@ package jchess.game.board;
 
 import jchess.game.Alliance;
 import jchess.game.board.pieces.*;
+import jchess.gui.GUI;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -98,21 +99,22 @@ public class Board {
                 && (yCandidateDestinationCoordinate <= MAX_Y_COORDINATE));
     }
 
-    public boolean makeMove() {
+    public boolean makeMove(GUI gui) {
 
         // to make changes
         System.out.println("Move made");
         setMovePieceSelected(false);
-        updateBoard();
+        updateBoard(gui);
         return true;
     }
 
-    private void updateBoard() {
+    private void updateBoard(GUI gui) {
 
         setNextMoveAlliance(getOppositionAlliance(getNextMoveAlliance()));
         boardCoordinate[xCoordinateNew - 1][yCoordinateNew - 1] =
                 boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1];
         boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1] = null;
+        gui.updateBoardGUI();
         System.out.println("Updated board");
     }
 

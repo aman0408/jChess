@@ -61,7 +61,8 @@ public class Pawn extends Piece {
     @Override
     public String toString() {
 
-        if(this.getPieceAlliance().isWhite()) {
+        Alliance pieceAlliance = getPieceAlliance();
+        if(pieceAlliance.isWhite()) {
             return "P";
         }
         else

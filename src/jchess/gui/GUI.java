@@ -121,7 +121,7 @@ public class GUI extends JFrame {
         }
     }
 
-    void updateBoardGUI() {
+    public void updateBoardGUI() {
 
         // get all the coordinates locally
         int a = board.getxCoordinatePrevious() - 1;

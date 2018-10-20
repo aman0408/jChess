@@ -56,7 +56,7 @@ public abstract class Piece {
         return pieceMoveNumber;
     }
 
-    public Set<Move> getLegalMoves() {
+    public Set<Move> getPieceLegalMoves() {
 
         return this.legalMoves;
     }
