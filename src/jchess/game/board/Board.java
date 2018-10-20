@@ -1,7 +1,7 @@
 package jchess.game.board;
 
 import jchess.game.Alliance;
-import jchess.game.pieces.*;
+import jchess.game.board.pieces.*;
 
 import java.util.HashSet;
 import java.util.Set;

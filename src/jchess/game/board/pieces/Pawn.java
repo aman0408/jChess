@@ -1,10 +1,8 @@
-package jchess.game.pieces;
+package jchess.game.board.pieces;
 
 import jchess.game.Alliance;
 import jchess.game.board.Board;
 import jchess.game.board.Move;
-
-import java.util.Set;
 
 public class Pawn extends Piece {
 
@@ -13,27 +11,6 @@ public class Pawn extends Piece {
 
     public Pawn(Board board, int xCoordinate, int yCoordinate, Alliance pieceAlliance, int pieceMoveNumber) {
         super(board, xCoordinate, yCoordinate, pieceAlliance, pieceMoveNumber);
-    }
-
-    @Override
-    public Alliance getPieceAlliance() {
-        return this.pieceAlliance;
-    }
-
-    @Override
-    public void setPieceMoveNumber() {
-        pieceMoveNumber++;
-    }
-
-    @Override
-    public int getPieceMoveNumber() {
-        return this.pieceMoveNumber;
-    }
-
-    @Override
-    public Set<Move> getLegalMoves() {
-        calculatePieceLegalMoves();
-        return this.legalMoves;
     }
 
     @Override
@@ -77,6 +54,11 @@ public class Pawn extends Piece {
     }
 
     @Override
+    public int getPieceValue() {
+        return 100;
+    }
+
+    @Override
     public String toString() {
 
         if(this.getPieceAlliance().isWhite()) {
@@ -84,22 +66,5 @@ public class Pawn extends Piece {
         }
         else
             return "p";
-    }
-
-    @Override
-    public void setCoordinate(int xCoordinate, int yCoordinate) {
-
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
-    }
-
-    @Override
-    public int getXCoordinate() {
-        return this.xCoordinate;
-    }
-
-    @Override
-    public int getYCoordinate() {
-        return this.yCoordinate;
     }
 }

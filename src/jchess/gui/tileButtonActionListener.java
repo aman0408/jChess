@@ -1,7 +1,7 @@
 package jchess.gui;
 
 import jchess.game.board.Board;
-import jchess.game.pieces.Piece;
+import jchess.game.board.pieces.Piece;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

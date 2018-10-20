@@ -30,7 +30,7 @@ public class GUI extends JFrame {
         // Get Piece icons
         try {
 
-            URL url = new URL("http://i.stack.imgur.com/memI0.png");
+            URL url = getClass().getResource("img/pieceIcons.png");
             BufferedImage icons = ImageIO.read(url);
 
             for (int ii = 0; ii < 2; ii++) {

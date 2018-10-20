@@ -1,4 +1,4 @@
-package jchess.game.ai;
+package jchess.ai;
 
 public class MiniMax {
 

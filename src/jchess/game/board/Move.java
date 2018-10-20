@@ -1,6 +1,6 @@
 package jchess.game.board;
 
-import jchess.game.pieces.Piece;
+import jchess.game.board.pieces.Piece;
 
 public class Move {
 
