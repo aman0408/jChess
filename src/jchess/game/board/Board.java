@@ -167,16 +167,20 @@ public class Board {
         movedPiece.setPieceMoveNumber();
         int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
         gui.updateBoardGUI();
-        System.out.println("Board score: " + BoardEvaluator.evaluate(this, 0));
-        System.out.println(getCurrentMoveAlliance() + "'s Move: ");
-        System.out.println("Move number:" + (moveNumber++));
-        System.out.println("Number of possible moves = " + numberOfPossibleMoves + "\n");
 
+        printBoardStatus(numberOfPossibleMoves);
         if(numberOfPossibleMoves == 0) {
 
             isGameOver = true;
             gui.endGame();
         }
+    }
+
+    private void printBoardStatus(int numberOfPossibleMoves) {
+        System.out.println(getCurrentMoveAlliance() + "'s Move");
+        System.out.println("Board score: " + BoardEvaluator.evaluate(this, 0));
+        System.out.println("Move number: " + (moveNumber++));
+        System.out.println("Number of possible moves: " + numberOfPossibleMoves + "\n");
     }
 
     private void initStandardBoard() {
@@ -221,10 +225,7 @@ public class Board {
         setMovePieceSelected(false);
         setPieces();
         int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
-        System.out.println("Board score: " + BoardEvaluator.evaluate(this, 0));
-        System.out.println(getCurrentMoveAlliance() + "'s Move: ");
-        System.out.println("Move number:" + (moveNumber++));
-        System.out.println("Number of possible moves = " + numberOfPossibleMoves + "\n");
+        printBoardStatus(numberOfPossibleMoves);
         printCurrentBoard();
     }
 
