@@ -1,5 +1,6 @@
 package jchess.game.board;
 
+import jchess.ai.BoardEvaluator;
 import jchess.game.Alliance;
 import jchess.game.board.pieces.*;
 import jchess.gui.GUI;
@@ -25,6 +26,7 @@ public class Board {
     private boolean isMovePieceSelected;
     private Set<Piece> whitePieces = new HashSet<>();
     private Set<Piece> blackPieces = new HashSet<>();
+    private boolean isGameOver = false;
 
     public Board() {
 
@@ -39,7 +41,7 @@ public class Board {
         this.currentMoveAlliance = nextMoveAlliance;
     }
 
-    private Set<Piece> getAlliancePieces(Alliance alliance) {
+    public Set<Piece> getAlliancePieces(Alliance alliance) {
 
         if(alliance == Alliance.WHITE) {
             return whitePieces;
@@ -165,13 +167,15 @@ public class Board {
         movedPiece.setPieceMoveNumber();
         int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
         gui.updateBoardGUI();
+        System.out.println("Board score: " + BoardEvaluator.evaluate(this, 0));
+        System.out.println(getCurrentMoveAlliance() + "'s Move: ");
+        System.out.println("Move number:" + (moveNumber++));
+        System.out.println("Number of possible moves = " + numberOfPossibleMoves + "\n");
+
         if(numberOfPossibleMoves == 0) {
 
+            isGameOver = true;
             gui.endGame();
-        } else {
-            System.out.println(getCurrentMoveAlliance() + "'s Move: \n"
-                    + "Move number:" + (moveNumber++)
-                    + "\nNumber of next possible moves = " + numberOfPossibleMoves + "\n");
         }
     }
 
@@ -217,9 +221,10 @@ public class Board {
         setMovePieceSelected(false);
         setPieces();
         int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
-        System.out.println(getCurrentMoveAlliance() + "'s Move: \n"
-                + "Move number:" + (moveNumber++)
-                + "\nNumber of next possible moves = " + numberOfPossibleMoves + "\n");
+        System.out.println("Board score: " + BoardEvaluator.evaluate(this, 0));
+        System.out.println(getCurrentMoveAlliance() + "'s Move: ");
+        System.out.println("Move number:" + (moveNumber++));
+        System.out.println("Number of possible moves = " + numberOfPossibleMoves + "\n");
         printCurrentBoard();
     }
 
@@ -315,5 +320,9 @@ public class Board {
         }
 
         return false;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
     }
 }

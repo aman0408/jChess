@@ -6,7 +6,7 @@ import jchess.game.board.Move;
 
 public class Pawn extends Piece {
 
-    private final int[] CANDIDATE_MOVE_X_COORDINATES = {0};
+    private final int[] CANDIDATE_MOVE_X_COORDINATES = {-1, 0, 1};
     private final int[] CANDIDATE_MOVE_Y_COORDINATES = {-2, -1, 1, 2};
 
     public Pawn(Board board, int xCoordinate, int yCoordinate, Alliance pieceAlliance, int pieceMoveNumber) {
@@ -38,12 +38,31 @@ public class Pawn extends Piece {
                     }
                 }
 
+                if(xCoordinateOffset == -1 && yCoordinateOffset != (getPieceAlliance().getDirection())) {
+                    continue;
+                } else if(xCoordinateOffset == 1 && yCoordinateOffset != (getPieceAlliance().getDirection())) {
+                    continue;
+                }
+
                 //kill move and en passent to be managed
                 int xCandidateDestinationCoordinate = this.xCoordinate + xCoordinateOffset;
                 int yCandidateDestinationCoordinate = this.yCoordinate + yCoordinateOffset;
 
                 if(Board.isValidCoordinate(xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)
                         && Move.isValidMove(this.board, this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate)) {
+
+                    Piece pieceOnDestination = board.getPieceOnCoordinate(xCandidateDestinationCoordinate,
+                            yCandidateDestinationCoordinate);
+
+
+                    if((pieceOnDestination != null) && (xCoordinateOffset == 0)
+                            &&  (pieceOnDestination.getPieceAlliance()!= getPieceAlliance())) {
+                        continue;
+                    }
+
+                    if(pieceOnDestination == null && (xCoordinateOffset == -1 || xCoordinateOffset == 1)) {
+                        continue;
+                    }
 
                     Alliance pieceAlliance = getPieceAlliance();
                     if(pieceAlliance == board.getCurrentMoveAlliance()) {
