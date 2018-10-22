@@ -1,9 +1,11 @@
 package jchess.game.board;
 
 import jchess.ai.BoardEvaluator;
+import jchess.ai.MiniMax;
 import jchess.game.Alliance;
 import jchess.game.board.pieces.*;
 import jchess.gui.GUI;
+import jdk.dynalink.linker.GuardedInvocation;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +39,7 @@ public class Board {
         return this.currentMoveAlliance;
     }
 
-    private void setCurrentMoveAlliance(Alliance nextMoveAlliance) {
+    public void setCurrentMoveAlliance(Alliance nextMoveAlliance) {
         this.currentMoveAlliance = nextMoveAlliance;
     }
 
@@ -111,7 +113,7 @@ public class Board {
         }
     }
 
-    private int calculateAllianceLegalMoves(Alliance alliance) {
+    public int calculateAllianceLegalMoves(Alliance alliance) {
 
         int numberOfAllianceLegalMoves = 0;
         Set<Piece> currentAlliancePieces = getAlliancePieces(alliance);
@@ -143,14 +145,24 @@ public class Board {
         return false;
     }
 
-    private void updateAlliancePieces() {
+    public void updateAlliancePieces() {
+
 
         Set<Piece> alliancePieces = getAlliancePieces(currentMoveAlliance);
-        try {
-            Piece deadPiece = getPieceOnCoordinate(xCoordinateNew, yCoordinateNew);
-            alliancePieces.remove(deadPiece);
-        } catch (NullPointerException ignored) {
+        alliancePieces.clear();
 
+        for(int x = 0; x < MAX_X_COORDINATE; x++) {
+            for(int y = 0; y < MAX_Y_COORDINATE; y++) {
+
+                Piece piece = boardCoordinate[x][y];
+
+                if(piece != null) {
+                    if(piece.getPieceAlliance() == currentMoveAlliance) {
+
+                        alliancePieces.add(piece);
+                    }
+                }
+            }
         }
     }
 
@@ -158,13 +170,17 @@ public class Board {
 
         Alliance oppositionAlliance = getOppositionAlliance(currentMoveAlliance);
         setCurrentMoveAlliance(oppositionAlliance);
-        updateAlliancePieces();
+
         Piece movedPiece = getPieceOnCoordinate(xCoordinatePrevious, yCoordinatePrevious);
         boardCoordinate[xCoordinateNew - 1][yCoordinateNew - 1] =
                 boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1];
         boardCoordinate[xCoordinatePrevious - 1][yCoordinatePrevious - 1] = null;
+        updateAlliancePieces();
+
+
         movedPiece.setCoordinate(xCoordinateNew, yCoordinateNew);
         movedPiece.setPieceMoveNumber();
+
         int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
         gui.updateBoardGUI();
 
@@ -173,14 +189,30 @@ public class Board {
 
             isGameOver = true;
             gui.endGame();
+            System.out.println("GAME OVER");
         }
+
+        if(currentMoveAlliance == Alliance.BLACK && !isGameOver) {
+            AIMove(gui);
+        }
+    }
+
+    private void AIMove(GUI gui) {
+        MiniMax minimax = new MiniMax();
+            Move AIMove = minimax.execute(this, 1);
+            xCoordinatePrevious = AIMove.getxCoordinatePrevious();
+            yCoordinatePrevious = AIMove.getyCoordinatePrevious();
+            xCoordinateNew = AIMove.getxCoordinateNew();
+            yCoordinateNew = AIMove.getyCoordinateNew();
+            updateBoard(gui);
     }
 
     private void printBoardStatus(int numberOfPossibleMoves) {
         System.out.println(getCurrentMoveAlliance() + "'s Move");
-        System.out.println("Board score: " + BoardEvaluator.evaluate(this, 0));
+        System.out.println("Current board score: " + BoardEvaluator.evaluate(this, 0));
         System.out.println("Move number: " + (moveNumber++));
-        System.out.println("Number of possible moves: " + numberOfPossibleMoves + "\n");
+        System.out.println("Current alliance active pieces: " + getAlliancePieces(currentMoveAlliance).size());
+        System.out.println("Possible moves: " + numberOfPossibleMoves + "\n");
     }
 
     private void initStandardBoard() {
@@ -268,7 +300,7 @@ public class Board {
         return (boardCoordinate[xCoordinate - 1][yCoordinate - 1]);
     }
 
-    private Alliance getOppositionAlliance(Alliance alliance) {
+    public Alliance getOppositionAlliance(Alliance alliance) {
 
         if(alliance == Alliance.WHITE) {
             return Alliance.BLACK;
@@ -325,5 +357,13 @@ public class Board {
 
     public boolean isGameOver() {
         return isGameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        isGameOver = gameOver;
+    }
+
+    public Piece[][] getBoardCoordinate() {
+        return boardCoordinate;
     }
 }

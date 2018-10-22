@@ -23,23 +23,26 @@ public class tileButtonActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        Piece pieceOnCoordinate = board.getPieceOnCoordinate(xCoordinate, yCoordinate);
+        if(!board.isGameOver()) {
 
-        if(pieceOnCoordinate == null || pieceOnCoordinate.getPieceAlliance() != board.getCurrentMoveAlliance()) {
+            Piece pieceOnCoordinate = board.getPieceOnCoordinate(xCoordinate, yCoordinate);
 
-            if(board.isMovePieceSelected()) {
+            if (pieceOnCoordinate == null || pieceOnCoordinate.getPieceAlliance() != board.getCurrentMoveAlliance()) {
 
-                board.setxCoordinateNew(xCoordinate);
-                board.setyCoordinateNew(yCoordinate);
-                if (!board.makeMove(gui)) {
-                    System.out.println("Invalid move!");
+                if (board.isMovePieceSelected()) {
+
+                    board.setxCoordinateNew(xCoordinate);
+                    board.setyCoordinateNew(yCoordinate);
+                    if (!board.makeMove(gui)) {
+                        System.out.println("Invalid move!");
+                    }
                 }
-            }
-        } else {
+            } else {
 
-            board.setxCoordinatePrevious(xCoordinate);
-            board.setyCoordinatePrevious(yCoordinate);
-            board.setMovePieceSelected(true);
+                board.setxCoordinatePrevious(xCoordinate);
+                board.setyCoordinatePrevious(yCoordinate);
+                board.setMovePieceSelected(true);
+            }
         }
     }
 }

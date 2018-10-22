@@ -4,12 +4,14 @@ import jchess.game.board.pieces.Piece;
 
 public class Move {
 
+    private Piece movedPiece;
     private int xCoordinatePrevious;
     private int yCoordinatePrevious;
     private int xCoordinateNew;
     private int yCoordinateNew;
 
     public Move(Piece movePiece, int xCoordinateNew, int yCoordinateNew) {
+        this.movedPiece = movePiece;
         this.xCoordinatePrevious = movePiece.getXCoordinate();
         this.yCoordinatePrevious = movePiece.getYCoordinate();
         this.xCoordinateNew = xCoordinateNew;
@@ -37,19 +39,23 @@ public class Move {
         return true;
     }
 
-    int getxCoordinatePrevious() {
+    public Piece getMovedPiece() {
+        return movedPiece;
+    }
+
+    public int getxCoordinatePrevious() {
         return xCoordinatePrevious;
     }
 
-    int getyCoordinatePrevious() {
+    public int getyCoordinatePrevious() {
         return yCoordinatePrevious;
     }
 
-    int getxCoordinateNew() {
+    public int getxCoordinateNew() {
         return xCoordinateNew;
     }
 
-    int getyCoordinateNew() {
+    public int getyCoordinateNew() {
         return yCoordinateNew;
     }
 }
