@@ -33,7 +33,9 @@ public class tileButtonActionListener implements ActionListener {
 
                     board.setxCoordinateNew(xCoordinate);
                     board.setyCoordinateNew(yCoordinate);
-                    if (!board.makeMove(gui)) {
+                    if (board.makeMove(gui)) {
+                        board.updateBoard(gui);
+                    } else {
                         System.out.println("Invalid move!");
                     }
                 }

@@ -1,16 +1,15 @@
 package jchess.game.board;
 
+import com.google.common.collect.ImmutableSet;
+import jchess.ai.AlphaBetaPruning;
 import jchess.ai.BoardEvaluator;
 import jchess.ai.MiniMax;
+import jchess.ai.MoveStrategy;
 import jchess.game.Alliance;
 import jchess.game.board.pieces.*;
 import jchess.gui.GUI;
-import jdk.dynalink.linker.GuardedInvocation;
-
 import java.util.HashSet;
 import java.util.Set;
-
-import static jchess.game.Alliance.WHITE;
 
 public class Board {
 
@@ -29,10 +28,15 @@ public class Board {
     private Set<Piece> whitePieces = new HashSet<>();
     private Set<Piece> blackPieces = new HashSet<>();
     private boolean isGameOver = false;
-
+    private boolean isMainBoard;
     public Board() {
 
+        isMainBoard = true;
         initStandardBoard();
+    }
+
+    public Board(Board mainBoard) {
+        isMainBoard = false;
     }
 
     public Alliance getCurrentMoveAlliance() {
@@ -46,9 +50,9 @@ public class Board {
     public Set<Piece> getAlliancePieces(Alliance alliance) {
 
         if(alliance == Alliance.WHITE) {
-            return whitePieces;
+            return Set.copyOf(whitePieces);
         } else {
-            return blackPieces;
+            return Set.copyOf(blackPieces);
         }
     }
 
@@ -105,7 +109,6 @@ public class Board {
         if(isInAllianceLegalMoves(currentMoveAlliance)) {
 
             setMovePieceSelected(false);
-            updateBoard(gui);
             return true;
         }
         else {
@@ -119,6 +122,9 @@ public class Board {
         Set<Piece> currentAlliancePieces = getAlliancePieces(alliance);
         for (Piece piece : currentAlliancePieces) {
 
+            if(piece == null) {
+                continue;
+            }
             piece.calculatePieceLegalMoves();
             numberOfAllianceLegalMoves += piece.getPieceLegalMoves().size();
         }
@@ -147,9 +153,8 @@ public class Board {
 
     public void updateAlliancePieces() {
 
-
-        Set<Piece> alliancePieces = getAlliancePieces(currentMoveAlliance);
-        alliancePieces.clear();
+        whitePieces.clear();
+        blackPieces.clear();
 
         for(int x = 0; x < MAX_X_COORDINATE; x++) {
             for(int y = 0; y < MAX_Y_COORDINATE; y++) {
@@ -157,16 +162,18 @@ public class Board {
                 Piece piece = boardCoordinate[x][y];
 
                 if(piece != null) {
-                    if(piece.getPieceAlliance() == currentMoveAlliance) {
+                    if(piece.getPieceAlliance() == Alliance.WHITE) {
 
-                        alliancePieces.add(piece);
+                        whitePieces.add(piece);
+                    } else {
+                        blackPieces.add(piece);
                     }
                 }
             }
         }
     }
 
-    private void updateBoard(GUI gui) {
+    public void updateBoard(GUI gui) {
 
         Alliance oppositionAlliance = getOppositionAlliance(currentMoveAlliance);
         setCurrentMoveAlliance(oppositionAlliance);
@@ -179,10 +186,9 @@ public class Board {
 
 
         movedPiece.setCoordinate(xCoordinateNew, yCoordinateNew);
-        movedPiece.setPieceMoveNumber();
-
-        int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
+        movedPiece.setPieceMoveNumber(movedPiece.getPieceMoveNumber() + 1);
         gui.updateBoardGUI();
+        int numberOfPossibleMoves = calculateAllianceLegalMoves(currentMoveAlliance);
 
         printBoardStatus(numberOfPossibleMoves);
         if(numberOfPossibleMoves == 0) {
@@ -192,19 +198,20 @@ public class Board {
             System.out.println("GAME OVER");
         }
 
-        if(currentMoveAlliance == Alliance.BLACK && !isGameOver) {
+        if(!isGameOver && getCurrentMoveAlliance() == Alliance.BLACK) {
             AIMove(gui);
         }
     }
 
     private void AIMove(GUI gui) {
-        MiniMax minimax = new MiniMax();
-            Move AIMove = minimax.execute(this, 1);
-            xCoordinatePrevious = AIMove.getxCoordinatePrevious();
-            yCoordinatePrevious = AIMove.getyCoordinatePrevious();
-            xCoordinateNew = AIMove.getxCoordinateNew();
-            yCoordinateNew = AIMove.getyCoordinateNew();
-            updateBoard(gui);
+
+        MoveStrategy minimax = new AlphaBetaPruning();
+        Move AIMove = minimax.execute(this, 1);
+        xCoordinatePrevious = AIMove.getxCoordinatePrevious();
+        yCoordinatePrevious = AIMove.getyCoordinatePrevious();
+        xCoordinateNew = AIMove.getxCoordinateNew();
+        yCoordinateNew = AIMove.getyCoordinateNew();
+        updateBoard(gui);
     }
 
     private void printBoardStatus(int numberOfPossibleMoves) {
@@ -218,17 +225,17 @@ public class Board {
     private void initStandardBoard() {
 
         // WHITE
-        boardCoordinate[0][0] = new Rook(this, 1, 1, WHITE, 0);
-        boardCoordinate[1][0] = new Knight(this, 2, 1, WHITE, 0);
-        boardCoordinate[2][0] = new Bishop(this, 3, 1, WHITE, 0);
-        boardCoordinate[3][0] = new Queen(this, 4, 1, WHITE, 0);
-        boardCoordinate[4][0] = new King(this, 5, 1, WHITE, 0);
-        boardCoordinate[5][0] = new Bishop(this, 6, 1, WHITE, 0);
-        boardCoordinate[6][0] = new Knight(this, 7, 1, WHITE, 0);
-        boardCoordinate[7][0] = new Rook(this, 8, 1, WHITE, 0);
+        boardCoordinate[0][0] = new Rook(this, 1, 1, Alliance.WHITE, 0);
+        boardCoordinate[1][0] = new Knight(this, 2, 1, Alliance.WHITE, 0);
+        boardCoordinate[2][0] = new Bishop(this, 3, 1, Alliance.WHITE, 0);
+        boardCoordinate[3][0] = new Queen(this, 4, 1, Alliance.WHITE, 0);
+        boardCoordinate[4][0] = new King(this, 5, 1, Alliance.WHITE, 0);
+        boardCoordinate[5][0] = new Bishop(this, 6, 1, Alliance.WHITE, 0);
+        boardCoordinate[6][0] = new Knight(this, 7, 1, Alliance.WHITE, 0);
+        boardCoordinate[7][0] = new Rook(this, 8, 1, Alliance.WHITE, 0);
         for(int xCoordinate = MIN_X_COORDINATE; xCoordinate <= MAX_X_COORDINATE; xCoordinate++) {
 
-            boardCoordinate[xCoordinate - 1][1] = new Pawn(this, xCoordinate, 2, WHITE, 0);
+            boardCoordinate[xCoordinate - 1][1] = new Pawn(this, xCoordinate, 2, Alliance.WHITE, 0);
         }
 
         // BLACK
@@ -271,7 +278,7 @@ public class Board {
                 }
 
                 Piece alliancePiece = boardCoordinate[xCoordinate - 1][yCoordinate - 1];
-                if(alliancePiece.getPieceAlliance() == WHITE) {
+                if(alliancePiece.getPieceAlliance() == Alliance.WHITE) {
                     whitePieces.add(alliancePiece);
                 } else {
                     blackPieces.add(alliancePiece);
@@ -314,25 +321,20 @@ public class Board {
 
         Piece pieceOnDestination = getPieceOnCoordinate(xCandidateDestinationCoordinate,
                 yCandidateDestinationCoordinate);
-        if(pieceOnDestination != null) {
-            getAlliancePieces(getOppositionAlliance(currentMoveAlliance)).remove(pieceOnDestination);
-        }
 
         int xPrevious = piece.getXCoordinate();
         int yPrevious = piece.getYCoordinate();
         boardCoordinate[xCandidateDestinationCoordinate - 1][yCandidateDestinationCoordinate - 1] =
                 boardCoordinate[xPrevious - 1][yPrevious - 1];
         boardCoordinate[xPrevious - 1][yPrevious - 1] = null;
+        updateAlliancePieces();
         boolean isInCheck = isInCheck();
 
         // revert board
         boardCoordinate[xPrevious - 1][yPrevious - 1] =
                 boardCoordinate[xCandidateDestinationCoordinate - 1][yCandidateDestinationCoordinate - 1];
         boardCoordinate[xCandidateDestinationCoordinate - 1][yCandidateDestinationCoordinate - 1] = pieceOnDestination;
-        if(pieceOnDestination != null) {
-            getAlliancePieces(getOppositionAlliance(currentMoveAlliance)).add(pieceOnDestination);
-        }
-
+        updateAlliancePieces();
         return isInCheck;
     }
 

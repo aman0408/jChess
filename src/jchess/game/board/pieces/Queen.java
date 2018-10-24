@@ -16,7 +16,7 @@ public class Queen extends Piece {
     @Override
     public void calculatePieceLegalMoves() {
 
-        this.legalMoves.clear();
+        (this.legalMoves).clear();
 
         for(final int xCoordinateOffset : CANDIDATE_MOVE_X_VECTOR_COORDINATES) {
 
@@ -42,12 +42,12 @@ public class Queen extends Piece {
                                 break;
                             }
                             Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
-                            this.legalMoves.add(legalMove);
+                            (this.legalMoves).add(legalMove);
                         }
                     } else if(pieceAlliance != board.getCurrentMoveAlliance()) {
 
                         Move legalMove = new Move(this, xCandidateDestinationCoordinate, yCandidateDestinationCoordinate);
-                        this.legalMoves.add(legalMove);
+                        (this.legalMoves).add(legalMove);
                     }
 
                     Piece pieceOnCoordinate = board.getPieceOnCoordinate(xCandidateDestinationCoordinate,

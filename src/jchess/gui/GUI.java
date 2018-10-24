@@ -71,19 +71,23 @@ public class GUI extends JFrame {
 
         // Set icons to piece buttons
         int[] pieceRow = {2, 3, 4, 1, 0, 4, 3, 2};
+
         for (int i = 0; i < Board.MAX_X_COORDINATE; i++) {
             tileButton[i][7].setIcon(new ImageIcon(
                     tileButtonIcons[0][pieceRow[i]])); // Setting black pieces
         }
+
         for (int i = 0; i < Board.MAX_X_COORDINATE; i++) {
             tileButton[i][6].setIcon(new ImageIcon(
                     tileButtonIcons[0][5])); // Setting black pawns
         }
+
         // set up the white pieces
         for (int i = 0; i < Board.MAX_X_COORDINATE; i++) {
             tileButton[i][1].setIcon(new ImageIcon(
                     tileButtonIcons[1][5])); // Setting pawns
         }
+
         for (int i = 0; i < Board.MAX_X_COORDINATE; i++) {
             tileButton[i][0].setIcon(new ImageIcon(
                     tileButtonIcons[1][pieceRow[i]]));
@@ -121,7 +125,7 @@ public class GUI extends JFrame {
         }
     }
 
-    public void updateBoardGUI() {
+    public boolean updateBoardGUI() {
 
         // get all the coordinates locally
         int a = board.getxCoordinatePrevious() - 1;
@@ -134,6 +138,7 @@ public class GUI extends JFrame {
         Icon icon = tileButton[a][b].getIcon();
         tileButton[c][d].setIcon(icon);
         tileButton[a][b].setIcon(new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB)));
+        return true;
     }
 
     public void endGame() {

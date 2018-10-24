@@ -8,7 +8,7 @@ import jchess.game.board.pieces.Piece;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MiniMax {
+public class MiniMax implements MoveStrategy {
 
 
     @Override
@@ -16,6 +16,7 @@ public class MiniMax {
         return "MiniMax";
     }
 
+    @Override
     public Move execute(Board board, int depth) {
 
         long startTime = System.currentTimeMillis();
@@ -113,7 +114,6 @@ public class MiniMax {
     }
 
     private void updateAIBoard(Board board, Move AIMove) {
-
         Piece movedPiece = AIMove.getMovedPiece();
         board.setxCoordinatePrevious(AIMove.getxCoordinatePrevious());
         board.setyCoordinatePrevious(AIMove.getyCoordinatePrevious());
@@ -135,10 +135,9 @@ public class MiniMax {
     }
 
     private void revertAIBoard(Board board, Move AIMove, Piece pieceOnPrevDestination) {
-
         Alliance oppositionAlliance = board.getOppositionAlliance(board.getCurrentMoveAlliance());
         board.setCurrentMoveAlliance(oppositionAlliance);
-        board.updateAlliancePieces(); // ???
+        board.updateAlliancePieces();
         Piece movedPiece = AIMove.getMovedPiece();
         Piece[][] boardCoordinate = board.getBoardCoordinate();
         boardCoordinate[board.getxCoordinatePrevious() - 1][board.getyCoordinatePrevious() - 1] =

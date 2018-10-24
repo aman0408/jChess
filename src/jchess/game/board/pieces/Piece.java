@@ -48,16 +48,16 @@ public abstract class Piece {
         return this.pieceAlliance;
     }
 
-    public void setPieceMoveNumber() {
-        this.pieceMoveNumber++;
+    public void setPieceMoveNumber(int pieceMoveNumber) {
+        this.pieceMoveNumber = pieceMoveNumber;
     }
 
-    int getPieceMoveNumber() {
+    public int getPieceMoveNumber() {
         return pieceMoveNumber;
     }
 
     public Set<Move> getPieceLegalMoves() {
 
-        return this.legalMoves;
+        return Set.copyOf(this.legalMoves);
     }
 }
