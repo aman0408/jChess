@@ -1,9 +1,7 @@
 package jchess.game.board;
 
-import com.google.common.collect.ImmutableSet;
 import jchess.ai.AlphaBetaPruning;
 import jchess.ai.BoardEvaluator;
-import jchess.ai.MiniMax;
 import jchess.ai.MoveStrategy;
 import jchess.game.Alliance;
 import jchess.game.board.pieces.*;
@@ -28,15 +26,8 @@ public class Board {
     private Set<Piece> whitePieces = new HashSet<>();
     private Set<Piece> blackPieces = new HashSet<>();
     private boolean isGameOver = false;
-    private boolean isMainBoard;
     public Board() {
-
-        isMainBoard = true;
         initStandardBoard();
-    }
-
-    public Board(Board mainBoard) {
-        isMainBoard = false;
     }
 
     public Alliance getCurrentMoveAlliance() {
@@ -104,7 +95,7 @@ public class Board {
                 && (yCandidateDestinationCoordinate <= MAX_Y_COORDINATE));
     }
 
-    public boolean makeMove(GUI gui) {
+    public boolean makeMove() {
 
         if(isInAllianceLegalMoves(currentMoveAlliance)) {
 
@@ -205,8 +196,8 @@ public class Board {
 
     private void AIMove(GUI gui) {
 
-        MoveStrategy minimax = new AlphaBetaPruning();
-        Move AIMove = minimax.execute(this, 1);
+        MoveStrategy miniMax = new AlphaBetaPruning();
+        Move AIMove = miniMax.execute(this, 1);
         xCoordinatePrevious = AIMove.getxCoordinatePrevious();
         yCoordinatePrevious = AIMove.getyCoordinatePrevious();
         xCoordinateNew = AIMove.getxCoordinateNew();
