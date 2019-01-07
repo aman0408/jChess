@@ -69,9 +69,7 @@ public class AlphaBetaPruning implements MoveStrategy {
 
     private int miniMax(Board board, int depth, int alpha, int beta) {
 
-        // terminating condition
         if(depth == 0 || board.isGameOver()) {
-            // HANDLE ISGAMEOVER AFTER THIS
             if(board.isGameOver()) {
                 board.setGameOver(false);
             }
