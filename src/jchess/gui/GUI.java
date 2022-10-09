@@ -31,6 +31,7 @@ public class GUI extends JFrame {
         try {
 
             URL url = getClass().getResource("img/pieceIcons.png");
+            System.out.println("Found icon");
             BufferedImage icons = ImageIO.read(url);
 
             for (int ii = 0; ii < 2; ii++) {
