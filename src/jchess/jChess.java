@@ -17,11 +17,13 @@ public class jChess {
             public void run() {
 
                 JFrame frame = new GUI("jChess", board);
+                System.out.println("Starting Chess");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLocationByPlatform(true);
                 frame.pack();
                 frame.setMinimumSize(frame.getSize());
                 frame.setVisible(true);
+                System.out.println("Started Chess");
             }
         });
     }
