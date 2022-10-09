@@ -63,7 +63,7 @@ public class AlphaBetaPruning implements MoveStrategy {
         }
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
-        System.out.println("Best move played, time elapsed: " + executionTime + "ms");
+        System.out.println("Best move played, time elapsed: " + executionTime + " milliseconds");
         return bestMove;
     }
 
